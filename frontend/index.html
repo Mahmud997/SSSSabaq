@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>USTAZ AI PRO MAX</title><link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">U</div><div><b>USTAZ AI</b><small>PRO MAX</small></div></div>
+    <nav>
+      <button class="nav active" data-view="home">Главная</button>
+      <button class="nav" data-view="lesson">Конструктор урока</button>
+      <button class="nav" data-view="builder">Конструктор материалов</button>
+      <button class="nav" data-view="presentation">Презентации</button>
+      <button class="nav" data-view="planning">Планирование</button>
+      <button class="nav" data-view="library">Общая библиотека</button>
+      <button class="nav" data-view="admin">Администрирование</button>
+    </nav>
+    <div class="side-foot">Методическая цифровая среда</div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><span class="eyebrow">ЦИФРОВАЯ МЕТОДИЧЕСКАЯ ПЛАТФОРМА</span><h1 id="page-title">Добро пожаловать в USTAZ AI</h1></div>
+      <select id="lang" aria-label="Язык интерфейса"><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option><option value="uz">Ўзбекча</option></select>
+    </header>
+    <section id="profile-gate" class="panel hidden">
+      <div class="section-head"><div><span class="eyebrow">ПЕРВИЧНАЯ НАСТРОЙКА</span><h2>Профиль учителя</h2><p>ФИО и школа обязательны. Регистрация не требуется.</p></div></div>
+      <form id="profile-form" class="form-grid">
+        <label>ФИО учителя *<input name="teacher_name" required minlength="3" placeholder="Иванов Иван Иванович"></label>
+        <label>Название школы *<input name="school_name" required minlength="2" placeholder="Средняя школа № ..."></label>
+        <label>Населённый пункт *<input name="locality" required minlength="2" placeholder="Город / село"></label>
+        <label>Предметы *<input name="subjects" required placeholder="Математика, алгебра"></label>
+        <div class="full"><button class="primary">Создать рабочее пространство</button></div>
+      </form>
+      <p class="hint">После создания сохраните ключ рабочего пространства в надёжном месте. Он нужен для восстановления доступа.</p>
+      <div class="actions" style="margin-top:14px">
+        <button type="button" class="secondary" id="workspace-backup">Скачать резервную копию (JSON)</button>
+        <label class="secondary" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:13px">
+          Восстановить из бэкапа<input type="file" id="workspace-restore" accept="application/json,.json" hidden>
+        </label>
+      </div>
+    </section>
+    <section id="home-view" class="view">
+      <div class="hero"><div><span class="eyebrow light">ВАША МЕТОДИЧЕСКАЯ СРЕДА</span><h2>От идеи урока<br>до готового материала</h2><p>Создавайте, сохраняйте и совершенствуйте учебные материалы в одном пространстве.</p><button class="white-btn" data-go="lesson">Создать урок <span>→</span></button></div><div class="hero-orb"><div class="orb-inner">U<span>AI</span></div></div></div>
+      <div class="stats"><article class="stat"><small>Мои уроки</small><b id="my-lessons">—</b><span>Сохранённые материалы</span></article><article class="stat"><small>Общая библиотека</small><b id="public-count">—</b><span>Доступные разработки</span></article><article class="stat"><small>Рабочее пространство</small><b id="workspace-status">Не создано</b><span>Локально + сервер</span></article></div>
+      <div class="panel" id="home-backup"><h3>Резервное копирование</h3>
+        <p class="hint">Ключ хранится в IndexedDB браузера (не в localStorage). Бэкап — все ваши материалы в JSON.</p>
+        <div class="actions">
+          <button type="button" class="secondary" id="workspace-backup-home">Скачать бэкап</button>
+          <label class="secondary" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:13px">
+            Импорт бэкапа<input type="file" id="workspace-restore-home" accept="application/json,.json" hidden>
+          </label>
+        </div></div>
+      <div class="panel"><h3>Рабочие модули</h3><div class="module-grid"><button data-go="lesson"><b>01</b><strong>Конструктор урока</strong><span>КСП, КМЖ и сценарии</span></button><button data-go="builder"><b>02</b><strong>Конструктор материалов</strong><span>Задания, тесты, рубрики</span></button><button data-go="presentation"><b>03</b><strong>Презентации</strong><span>Слайды к уроку, PPTX</span></button><button data-go="planning"><b>04</b><strong>Планирование</strong><span>КТП, СОР, СОЧ, планы</span></button><button data-go="library"><b>05</b><strong>Общая библиотека</strong><span>Обезличенные разработки</span></button><button data-go="admin"><b>06</b><strong>Мониторинг</strong><span>Панель администратора</span></button></div></div>
+    </section>
+    <section id="lesson-view" class="view hidden">
+      <div class="panel"><span class="eyebrow">НОВЫЙ МАТЕРИАЛ</span><h2>Конструктор урока</h2><form id="lesson-form" class="form-grid">
+        <label>Предмет<input name="subject" required placeholder="Математика"></label>
+        <label>Класс<input name="grade" required placeholder="6 класс"></label>
+        <label class="full">Тема урока<input name="topic" required placeholder="Сложение рациональных чисел"></label>
+        <label class="full">Название материала<input name="title" required placeholder="КСП — Сложение рациональных чисел"></label>
+        <label>Условия кабинета<input name="room_conditions" required placeholder="Например: стандартный кабинет, проектор, без компьютеров"></label>
+        <label>Язык документа<select name="language"><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option><option value="uz">Ўзбекча (кириллица)</option></select></label>
+        <label class="full">Методический профиль<textarea name="methodical_profile" rows="3" placeholder="Например: алгоритмизация и самопроверка по образцу"></textarea></label>
+        <label class="full">Содержание / методические заметки<textarea name="content" rows="5" placeholder="Можно сохранить собственные заметки или сгенерировать полный материал с AI..."></textarea></label>
+        <div class="full actions"><button class="primary" type="button" id="generate-ai">Сгенерировать КСП / КМЖ с AI</button><button class="secondary">Сохранить личный материал</button></div>
+      </form><p class="hint">Создайте материал с AI или вручную, затем откройте его в блочном редакторе. DOCX экспортирует заголовки, текст и таблицы.</p></div>
+
+      <section id="document-editor" class="panel hidden">
+        <div class="section-head editor-head">
+          <div><span class="eyebrow">РЕДАКТОР ДОКУМЕНТА</span><h2>Редактирование <span id="editor-kind" class="mod-badge">КСП / КМЖ</span></h2><p id="editor-hint">Разделы редактируются отдельно. Изменения автоматически сохраняются в личном рабочем пространстве.</p></div>
+          <div class="editor-actions"><span id="save-indicator" class="save-indicator">Не сохранено</span><button class="secondary" id="preview-doc">Просмотр / печать</button><button class="secondary" id="export-docx">Экспорт DOCX</button><button class="secondary" id="export-xlsx">Экспорт XLSX</button><button class="secondary" id="close-editor">Закрыть</button></div>
+        </div>
+        <div class="form-grid editor-meta">
+          <label>Название<input id="editor-title"></label>
+          <label>Предмет<input id="editor-subject"></label>
+          <label>Класс<input id="editor-grade"></label>
+          <label>Тема<input id="editor-topic"></label>
+          <label>Язык документа (не зависит от языка интерфейса)<select id="editor-language"><option value="">— выберите —</option><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option><option value="uz">Ўзбекча (кириллица)</option></select></label>
+          <label>Условия кабинета<input id="editor-room" placeholder="Например: проектор есть, компьютеров нет"></label>
+        </div>
+        <ul id="editor-warnings" class="warnings"></ul>
+        <div id="versions-box" class="versions-box">
+          <button type="button" class="secondary sm" id="versions-toggle">История версий</button>
+          <div id="versions-panel" class="regen-panel hidden"><div id="versions-list" class="versions-list"></div></div>
+        </div>
+        <div id="variants-box" class="hidden"><button type="button" class="secondary" id="variants-toggle">Создать варианты (AI)</button>
+          <div id="variants-panel" class="regen-panel hidden"><label>Сколько новых вариантов<select id="variants-count"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+            <textarea id="variants-instr" rows="2" placeholder="Что изменить в вариантах? (необязательно)"></textarea><button type="button" class="primary sm" id="variants-run">Сгенерировать варианты</button></div></div>
+        <div id="editor-blocks" class="editor-blocks"></div>
+        <div class="actions"><button class="secondary" id="add-block">Добавить дополнительный раздел</button><button class="primary" id="save-document">Сохранить сейчас</button></div>
+      </section>
+      <div id="lesson-results" class="stack"></div>
+    </section>
+    <section id="builder-view" class="view hidden">
+      <div class="panel"><span class="eyebrow">МЕТОДИЧЕСКИЙ КОНСТРУКТОР</span><h2>Материалы к уроку</h2>
+        <p>Задания A/B/C, карточки, рабочие листы, тесты с ключом и рубрики с дескрипторами. Результат открывается в том же редакторе.</p>
+        <form id="builder-form" class="form-grid">
+          <label>Тип материала<select name="kind" id="builder-kind"><option value="tasks_abc">Задания A / B / C</option><option value="cards">Карточки</option><option value="worksheet">Рабочий лист</option><option value="test">Тест с ответами и критериями</option><option value="rubric">Рубрика и дескрипторы</option></select></label>
+          <label>На основе урока (необязательно)<select name="lesson_id" id="builder-lesson"><option value="">— без привязки —</option></select></label>
+          <label>Предмет<input name="subject" required placeholder="Математика"></label>
+          <label>Класс<input name="grade" required placeholder="6 класс"></label>
+          <label class="full">Тема<input name="topic" required placeholder="Сложение рациональных чисел"></label>
+          <label>Язык документа<select name="language"><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option><option value="uz">Ўзбекча (кириллица)</option></select></label>
+          <label>Условия кабинета<input name="room_conditions" placeholder="Например: проектор есть, компьютеров нет"></label>
+          <label id="builder-count-wrap" class="hidden"><span id="builder-count-label">Количество</span><input name="count" type="number" min="1" max="20" value="6"></label>
+          <label id="builder-format-wrap" class="hidden">Формат теста<select name="test_format"><option>выбор ответа</option><option>открытые вопросы</option><option>смешанный</option></select></label>
+          <label class="full">Пожелание (необязательно)<textarea name="instruction" rows="2" placeholder="Например: больше задач на применение, без вычислительной техники"></textarea></label>
+          <div class="full actions"><button class="primary" id="builder-run" type="submit">Создать материал с AI</button></div>
+        </form></div>
+    </section>
+    
+    <section id="presentation-view" class="view hidden">
+      <div class="panel"><span class="eyebrow">ПРЕЗЕНТАЦИИ</span><h2>Слайды к уроку</h2>
+        <p>Создайте презентацию по теме или на основе готового КСП. Редактируйте слайды, экспортируйте PPTX или распечатайте как PDF.</p>
+        <form id="pres-form" class="form-grid">
+          <label>На основе урока (необязательно)<select name="lesson_id" id="pres-lesson"><option value="">— без привязки —</option></select></label>
+          <label>Число слайдов<input name="slide_count" type="number" min="6" max="14" value="10"></label>
+          <label>Предмет<input name="subject" required placeholder="Математика"></label>
+          <label>Класс<input name="grade" required placeholder="6 класс"></label>
+          <label class="full">Тема<input name="topic" required placeholder="Сложение рациональных чисел"></label>
+          <label>Язык документа<select name="language"><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option><option value="uz">Ўзбекча (кириллица)</option></select></label>
+          <label>Условия кабинета<input name="room_conditions" placeholder="Например: проектор есть / проектора нет"></label>
+          <label class="full">Пожелание (необязательно)<textarea name="instruction" rows="2" placeholder="Например: больше визуальных опор, меньше текста"></textarea></label>
+          <div class="full actions"><button class="primary" id="pres-run" type="submit">Создать презентацию с AI</button></div>
+        </form>
+      </div>
+      <section id="presentation-editor" class="panel hidden">
+        <div class="section-head editor-head">
+          <div><span class="eyebrow">РЕДАКТОР СЛАЙДОВ</span><h2 id="pres-editor-title">Презентация</h2>
+            <p>Правьте текст слайдов. Заметки учителя не попадают на экран. PPTX — для проектора; «Печать PDF» — через браузер.</p></div>
+          <div class="editor-actions">
+            <span id="pres-save-indicator" class="save-indicator">Сохранено</span>
+            <button class="secondary" id="pres-preview">Просмотр / PDF</button>
+            <button class="secondary" id="pres-export-pptx">Экспорт PPTX</button><button class="secondary" id="pres-export-xlsx">Экспорт XLSX</button>
+            <button class="secondary" id="pres-close">Закрыть</button>
+          </div>
+        </div>
+        <div class="form-grid editor-meta">
+          <label>Название<input id="pres-title"></label>
+          <label>Предмет<input id="pres-subject"></label>
+          <label>Класс<input id="pres-grade"></label>
+          <label>Тема<input id="pres-topic"></label>
+          <label>Язык<select id="pres-language"><option value="">—</option><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option><option value="uz">Ўзбекча (кириллица)</option></select></label>
+          <label>Условия кабинета<input id="pres-room"></label>
+        </div>
+        <ul id="pres-warnings" class="warnings"></ul>
+        <div class="pres-toolbar">
+          <button type="button" class="secondary sm" id="pres-add-slide">+ Слайд</button>
+          <select id="pres-new-layout" class="sm-select">
+            <option value="content">content</option>
+            <option value="title">title</option>
+            <option value="section">section</option>
+            <option value="bullets">bullets</option>
+            <option value="two_col">two_col</option>
+            <option value="closing">closing</option>
+          </select>
+        </div>
+        <div id="pres-slides" class="pres-slides"></div>
+        <div class="actions"><button class="primary" id="pres-save">Сохранить сейчас</button></div>
+      </section>
+      <div id="pres-results" class="stack"></div>
+    </section>
+
+    
+    <section id="planning-view" class="view hidden">
+      <div class="panel"><span class="eyebrow">ПЛАНИРОВАНИЕ И ОЦЕНИВАНИЕ</span><h2>КТП, СОР, СОЧ, планы</h2>
+        <p>Календарно-тематическое планирование, суммативное оценивание за раздел и период, диагностика, годовой и тематический планы. Результат открывается в общем редакторе (таблицы, DOCX).</p>
+        <form id="planning-form" class="form-grid">
+          <label>Тип документа<select name="kind" id="planning-kind">
+            <option value="ktp">КТП (календарно-тематическое)</option>
+            <option value="theme_plan">Тематический план раздела</option>
+            <option value="year_plan">Годовой план</option>
+            <option value="sor">СОР (суммативное за раздел)</option>
+            <option value="soch">СОЧ (суммативное за период)</option>
+            <option value="diagnostic">Диагностика знаний</option>
+          </select></label>
+          <label>На основе урока / материала<select name="lesson_id" id="planning-lesson"><option value="">— без привязки —</option></select></label>
+          <label>Предмет<input name="subject" required placeholder="Математика"></label>
+          <label>Класс<input name="grade" required placeholder="6 класс"></label>
+          <label class="full">Тема / раздел / период<input name="topic" required placeholder="Например: Рациональные числа · 2 четверть"></label>
+          <label>Часов (ориентир)<input name="hours" type="number" min="1" max="140" value="8" id="planning-hours"></label>
+          <label>Язык документа<select name="language"><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option><option value="uz">Ўзбекча (кириллица)</option></select></label>
+          <label>Условия кабинета<input name="room_conditions" placeholder="Необязательно"></label>
+          <label class="full">Пожелание (необязательно)<textarea name="instruction" rows="2" placeholder="Например: 2 часа в неделю, акцент на практические работы"></textarea></label>
+          <div class="full actions"><button class="primary" id="planning-run" type="submit">Создать с AI</button></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="library-view" class="view hidden">
+      <div class="panel"><span class="eyebrow">ОБМЕН МЕТОДИЧЕСКИМИ РАЗРАБОТКАМИ</span><h2>Общая библиотека</h2>
+        <p>Только одобренные администратором обезличенные копии. Можно добавить в избранное или скопировать к себе.</p>
+        <div class="form-grid" style="margin-bottom:12px">
+          <label>Поиск<input id="lib-q" placeholder="Тема, предмет…"></label>
+          <label>Предмет<input id="lib-subject" placeholder="Математика"></label>
+          <label>Класс<input id="lib-grade" placeholder="6"></label>
+          <div class="full actions"><button class="secondary" id="refresh-library">Обновить</button></div>
+        </div>
+      </div>
+      <div class="panel"><h3>Избранное</h3><div id="favorites-list" class="stack"><article class="item">Пока пусто.</article></div></div>
+      <div class="panel"><h3>Мои шаблоны</h3><div id="templates-list" class="stack"><article class="item">Сохраните урок как шаблон из списка материалов.</article></div></div>
+      <div id="library-list" class="stack"></div>
+    </section>
+    <section id="admin-view" class="view hidden"><div class="panel"><span class="eyebrow">ЗАКРЫТЫЙ РАЗДЕЛ</span><h2>Главный администратор</h2><p>Доступ по отдельному секрету из серверной конфигурации.</p><label>ADMIN_SECRET<input id="admin-secret" type="password" autocomplete="off"></label><button class="primary" id="admin-open">Открыть панель</button><p id="admin-message" class="hint"></p></div><div id="admin-dashboard" class="hidden stack"></div></section>
+    <footer>USTAZ AI PRO MAX <span>© 2026</span></footer>
+  </main>
+</div>
+<div id="print-overlay" class="hidden"><div class="print-toolbar"><b>Просмотр перед печатью</b><span><button class="white-btn" id="print-now">Печать</button><button class="white-btn" id="print-close">Закрыть</button></span></div><div id="print-paper" class="paper portrait"></div></div>
+<style id="page-style"></style>
+<div id="toast" class="toast"></div><script src="/storage.js"></script><script src="/docview.js"></script><script src="/app.js"></script><script src="/editor.js"></script><script src="/builder.js"></script><script src="/presentation.js"></script><script src="/planning.js"></script><script src="/library.js"></script><script src="/admin.js"></script>
+</body></html>

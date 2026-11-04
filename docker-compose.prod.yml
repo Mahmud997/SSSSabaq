@@ -1,0 +1,58 @@
+# Production stack: app + PostgreSQL + Nginx (HTTPS)
+# Usage on Ubuntu 24.04:
+#   cp .env.example .env && nano .env
+#   mkdir -p certs && # place fullchain.pem privkey.pem
+#   docker compose -f docker-compose.prod.yml up -d --build
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ustaz}
+      POSTGRES_USER: ${POSTGRES_USER:-ustaz}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ustaz} -d ${POSTGRES_DB:-ustaz}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [internal]
+
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-ustaz}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-ustaz}}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [internal]
+    # no public ports — only via nginx
+    expose:
+      - "8000"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+      - certbot_www:/var/www/certbot:ro
+    depends_on:
+      - app
+    networks: [internal]
+
+volumes:
+  postgres_data:
+  certbot_www:
+
+networks:
+  internal:
+    driver: bridge
